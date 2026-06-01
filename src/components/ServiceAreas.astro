@@ -1,0 +1,353 @@
+---
+import type enJson from '../i18n/en.json';
+type I18n = typeof enJson;
+
+export interface Props {
+  t: I18n;
+  lang: 'en' | 'th';
+}
+
+const { t, lang } = Astro.props;
+---
+
+<section
+  id="areas"
+  class="py-24 md:py-32 bg-paper-deep"
+  aria-labelledby="areas-heading"
+>
+  <div class="container mx-auto px-6 md:px-10 lg:px-16">
+
+    <div class="mb-12">
+      <p class="section-num mb-2">{t.areas.section_num}</p>
+      <h2
+        id="areas-heading"
+        class="eyebrow"
+      >
+        {t.areas.eyebrow}
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
+
+      <!-- SVG Map -->
+      <div class="areas-map" aria-label="Stylized map of Bangkok service areas">
+        <svg
+          viewBox="0 0 400 300"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-full max-w-lg"
+          role="img"
+          aria-labelledby="map-title"
+        >
+          <title id="map-title">Service area map — Sukhumvit & Makkasan</title>
+
+          <!-- Service area boundary (dotted) -->
+          <path
+            id="service-boundary"
+            d="M 60 60 Q 80 40 180 50 Q 280 55 340 90 Q 360 130 340 180 Q 320 230 250 250 Q 180 265 130 240 Q 80 215 60 170 Q 40 130 60 60 Z"
+            stroke="#b85c3c"
+            stroke-width="1"
+            stroke-dasharray="6 4"
+            fill="none"
+            opacity="0.4"
+          />
+
+          <!-- Sukhumvit Road (main horizontal line) -->
+          <path
+            id="sukhumvit-road"
+            d="M 50 165 Q 120 160 200 162 Q 280 164 355 158"
+            stroke="#1a1a1a"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+            style="stroke-dasharray: 400; stroke-dashoffset: 400;"
+          />
+
+          <!-- Road label -->
+          <text
+            x="185"
+            y="185"
+            font-family="Manrope, sans-serif"
+            font-size="9"
+            fill="#5a5147"
+            text-anchor="middle"
+            letter-spacing="2"
+            class="areas-label opacity-0"
+          >
+            SUKHUMVIT ROAD
+          </text>
+
+          <!-- Makkasan connection (dashed spur northwest) -->
+          <path
+            d="M 120 162 Q 100 130 90 100"
+            stroke="#5a5147"
+            stroke-width="1"
+            stroke-dasharray="4 3"
+            fill="none"
+            opacity="0.6"
+          />
+
+          <!-- Station dots + labels -->
+
+          <!-- Makkasan -->
+          <circle
+            id="dot-makkasan"
+            cx="90"
+            cy="98"
+            r="6"
+            fill="#b85c3c"
+            class="station-dot"
+            style="transform-origin: 90px 98px; transform: scale(0);"
+          />
+          <text
+            x="104"
+            y="102"
+            font-family="Fraunces, serif"
+            font-style="italic"
+            font-size="12"
+            fill="#1a1a1a"
+            class="areas-label opacity-0"
+          >
+            Makkasan
+          </text>
+
+          <!-- Asoke -->
+          <circle
+            id="dot-asoke"
+            cx="148"
+            cy="162"
+            r="6"
+            fill="#b85c3c"
+            class="station-dot"
+            style="transform-origin: 148px 162px; transform: scale(0);"
+          />
+          <text
+            x="148"
+            y="148"
+            font-family="Fraunces, serif"
+            font-style="italic"
+            font-size="12"
+            fill="#1a1a1a"
+            text-anchor="middle"
+            class="areas-label opacity-0"
+          >
+            Asoke
+          </text>
+
+          <!-- Phrom Phong -->
+          <circle
+            id="dot-pp"
+            cx="210"
+            cy="162"
+            r="6"
+            fill="#b85c3c"
+            class="station-dot"
+            style="transform-origin: 210px 162px; transform: scale(0);"
+          />
+          <text
+            x="210"
+            y="148"
+            font-family="Fraunces, serif"
+            font-style="italic"
+            font-size="12"
+            fill="#1a1a1a"
+            text-anchor="middle"
+            class="areas-label opacity-0"
+          >
+            Phrom Phong
+          </text>
+
+          <!-- Thonglor -->
+          <circle
+            id="dot-tl"
+            cx="268"
+            cy="161"
+            r="6"
+            fill="#b85c3c"
+            class="station-dot"
+            style="transform-origin: 268px 161px; transform: scale(0);"
+          />
+          <text
+            x="268"
+            y="147"
+            font-family="Fraunces, serif"
+            font-style="italic"
+            font-size="12"
+            fill="#1a1a1a"
+            text-anchor="middle"
+            class="areas-label opacity-0"
+          >
+            Thonglor
+          </text>
+
+          <!-- Ekkamai -->
+          <circle
+            id="dot-ek"
+            cx="324"
+            cy="159"
+            r="6"
+            fill="#b85c3c"
+            class="station-dot"
+            style="transform-origin: 324px 159px; transform: scale(0);"
+          />
+          <text
+            x="324"
+            y="145"
+            font-family="Fraunces, serif"
+            font-style="italic"
+            font-size="12"
+            fill="#1a1a1a"
+            text-anchor="middle"
+            class="areas-label opacity-0"
+          >
+            Ekkamai
+          </text>
+
+          <!-- BTS line indicator -->
+          <line
+            x1="148"
+            y1="156"
+            x2="148"
+            y2="130"
+            stroke="#c9bea6"
+            stroke-width="1"
+            class="station-tick"
+          />
+          <line
+            x1="210"
+            y1="156"
+            x2="210"
+            y2="130"
+            stroke="#c9bea6"
+            stroke-width="1"
+            class="station-tick"
+          />
+          <line
+            x1="268"
+            y1="155"
+            x2="268"
+            y2="130"
+            stroke="#c9bea6"
+            stroke-width="1"
+            class="station-tick"
+          />
+          <line
+            x1="324"
+            y1="153"
+            x2="324"
+            y2="130"
+            stroke="#c9bea6"
+            stroke-width="1"
+            class="station-tick"
+          />
+        </svg>
+      </div>
+
+      <!-- Right: Area list -->
+      <div class="areas-list">
+        <h3 class="font-serif font-medium text-2xl md:text-3xl text-ink mb-6">
+          {t.areas.list_heading}
+        </h3>
+        <ul class="space-y-0" role="list">
+          {t.areas.stations.map((station) => (
+            <li class="area-item py-4 border-b border-line flex items-center gap-3 opacity-0">
+              <span class="w-2 h-2 bg-terra flex-shrink-0 rotate-45"></span>
+              <span class="font-serif italic text-lg text-ink">{station}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="font-sans text-muted text-sm mt-8 leading-relaxed">
+          {t.areas.note}
+        </p>
+
+        <a
+          href={`/${lang}/book`}
+          class="btn-terra inline-flex mt-6 text-sm"
+        >
+          {lang === 'en' ? 'Book a clean' : 'จองบริการ'}
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const road = document.getElementById('sukhumvit-road');
+  const dots = document.querySelectorAll('.station-dot');
+  const labels = document.querySelectorAll('.areas-label');
+  const areaItems = document.querySelectorAll('.area-item');
+
+  if (prefersReduced) {
+    if (road) gsap.set(road, { strokeDashoffset: 0 });
+    gsap.set(dots, { scale: 1 });
+    gsap.set(labels, { opacity: 1 });
+    gsap.set(areaItems, { opacity: 1, y: 0 });
+  } else {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#areas',
+        start: 'top 65%',
+      },
+    });
+
+    // Road draws
+    if (road) {
+      tl.to(road, {
+        strokeDashoffset: 0,
+        duration: 1.2,
+        ease: 'power2.inOut',
+      });
+    }
+
+    // Station dots pop in
+    tl.to(
+      dots,
+      {
+        scale: 1,
+        duration: 0.3,
+        stagger: 0.15,
+        ease: 'back.out(2)',
+        transformOrigin: 'center center',
+      },
+      '-=0.4'
+    );
+
+    // Labels fade in
+    tl.fromTo(
+      labels,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 0.4,
+        stagger: 0.1,
+        ease: 'power2.out',
+      },
+      '-=0.4'
+    );
+
+    // Area list items
+    gsap.fromTo(
+      areaItems,
+      { opacity: 0, y: 12 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#areas',
+          start: 'top 65%',
+        },
+      }
+    );
+  }
+</script>

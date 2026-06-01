@@ -1,0 +1,394 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Hero from '../../components/Hero.astro';
+import TrustStrip from '../../components/TrustStrip.astro';
+import Services from '../../components/Services.astro';
+import PricingCalculator from '../../components/PricingCalculator';
+import WhyUs from '../../components/WhyUs.astro';
+import Gallery from '../../components/Gallery';
+import ServiceAreas from '../../components/ServiceAreas.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import FAQ from '../../components/FAQ';
+import ScrollStory from '../../components/ScrollStory.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/global.css';
+
+import t from '../../i18n/en.json';
+const lang = 'en';
+---
+
+<Base
+  title="Dee Cleaning Co. — Premium Condo Cleaning Bangkok"
+  description="A small cleaning team serving Sukhumvit & Makkasan condos. Same cleaner, fully insured, book on LINE."
+  lang={lang}
+>
+  <Nav t={t} lang={lang} />
+  <main id="main-content">
+    <Hero t={t} lang={lang} />
+    <TrustStrip t={t} />
+    <ScrollStory />
+    <Services t={t} lang={lang} />
+
+    <section class="py-16 md:py-20 bg-paper" aria-label="Pricing calculator">
+      <div class="container mx-auto px-6 md:px-10 lg:px-16 max-w-2xl">
+        <PricingCalculator t={t.calculator} lang={lang} client:load />
+      </div>
+    </section>
+    <WhyUs t={t} />
+    <Gallery t={t.gallery} client:visible />
+    <ServiceAreas t={t} lang={lang} />
+    <Testimonials t={t} />
+    <!--
+      Spray-mist wrapper: a radial burst expands from center when FAQ enters view,
+      like someone spraying cleaning solution before wiping — then vanishes.
+    -->
+    <div id="faq-wrapper" class="relative overflow-hidden">
+      <div id="faq-spray" aria-hidden="true" style="
+        position:absolute;inset:0;
+        background:radial-gradient(ellipse at 50% 20%, rgba(184,92,60,0.08) 0%, transparent 65%);
+        transform:scale(0);transform-origin:50% 15%;
+        pointer-events:none;z-index:0;
+      "></div>
+      <div style="position:relative;z-index:1;">
+        <FAQ t={t.faq} client:visible />
+      </div>
+    </div>
+    <FinalCTA t={t} lang={lang} />
+  </main>
+  <Footer t={t} lang={lang} />
+</Base>
+
+<!-- Consolidated GSAP script -->
+<script>
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (reduced) {
+  gsap.set([
+    '#hero .hero-item', '#hero-wipe',
+    '.trust-pill', '.wipe-curtain',
+    '.services-left', '.service-row', '#receipt-tape', '.price-underline',
+    '#why-header', '.why-card', '.why-num', '.why-line',
+    '#reviews-header', '.testimonial-card', '.testimonial-quote-mark', '#reviews-disclaimer',
+    '#final-cta .cta-word', '#final-cta .cta-item', '#ink-spread', '.mop-line',
+    '.area-item', '.areas-label', '.station-dot', '#faq-spray',
+  ], { opacity: 1, y: 0, x: 0, scale: 1, scaleX: 1, width: 'auto', height: 'auto' });
+  document.getElementById('sukhumvit-road')?.setAttribute('style', 'stroke-dasharray:none;stroke-dashoffset:0;');
+  const prog = document.getElementById('scroll-progress');
+  if (prog) prog.style.display = 'none';
+} else {
+
+  // ─── SCROLL PROGRESS BAR ─────────────────────────────────────────────────
+  // Fills left-to-right as you scroll — like a cleaning job percentage tracker.
+  // At 100%, the whole page is clean. Congratulations.
+
+  const progressBar = document.getElementById('scroll-progress');
+  if (progressBar) {
+    gsap.to(progressBar, {
+      width: '100%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.3,
+      },
+    });
+  }
+
+  // ─── HERO ─────────────────────────────────────────────────────────────────
+
+  const heroWipe = document.getElementById('hero-wipe');
+  const heroItems = gsap.utils.toArray<HTMLElement>('#hero .hero-item');
+  const ornLeft = document.getElementById('ornament-left');
+  const ornRight = document.getElementById('ornament-right');
+
+  const heroTl = gsap.timeline({ delay: 0.15 });
+  if (heroWipe) heroTl.to(heroWipe, { x: '110%', duration: 0.85, ease: 'power2.inOut' });
+  heroTl.fromTo(heroItems, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out' }, heroWipe ? '-=0.5' : 0);
+  if (ornLeft && ornRight) heroTl.to([ornLeft, ornRight], { width: 80, duration: 0.55, ease: 'power2.out' }, '-=0.5');
+
+  // Hero subtle parallax: background drifts slightly slower than content on scroll
+  // — like dust that hasn't quite settled yet
+  gsap.to('#hero', {
+    backgroundPositionY: '30%',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1.5,
+    },
+  });
+
+  document.querySelectorAll<HTMLElement>('.cta-arrow').forEach((arrow) => {
+    const btn = arrow.closest('a');
+    if (!btn) return;
+    btn.addEventListener('mouseenter', () => gsap.to(arrow, { x: 5, duration: 0.18, ease: 'power2.out' }));
+    btn.addEventListener('mouseleave', () => gsap.to(arrow, { x: 0, duration: 0.18, ease: 'power2.in' }));
+  });
+
+  // ─── NAV mop-border ───────────────────────────────────────────────────────
+
+  const nav = document.getElementById('site-nav');
+  const mopBorder = document.getElementById('nav-mop-border');
+  let mopDone = false;
+
+  function updateNav() {
+    if (!nav) return;
+    if (window.scrollY > 80) {
+      nav.classList.add('bg-paper');
+      nav.classList.remove('bg-transparent');
+      if (!mopDone && mopBorder) {
+        mopDone = true;
+        gsap.fromTo(mopBorder, { width: '0%' }, { width: '100%', duration: 0.55, ease: 'power2.inOut' });
+      }
+    } else {
+      nav.classList.remove('bg-paper');
+      nav.classList.add('bg-transparent');
+    }
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  // ─── TRUST STRIP — pill polish ────────────────────────────────────────────
+
+  const pills = gsap.utils.toArray<HTMLElement>('.trust-pill');
+  const shines = gsap.utils.toArray<HTMLElement>('.pill-shine');
+
+  gsap.fromTo(pills, { opacity: 0, y: 12 }, {
+    opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out',
+    scrollTrigger: { trigger: '#trust', start: 'top 90%' },
+    onComplete() {
+      shines.forEach((s, i) =>
+        gsap.fromTo(s, { x: '-100%' }, { x: '120%', duration: 0.45, delay: i * 0.08, ease: 'power1.inOut' })
+      );
+    },
+  });
+
+  pills.forEach((pill) => {
+    const shine = pill.querySelector<HTMLElement>('.pill-shine');
+    if (!shine) return;
+    pill.addEventListener('mouseenter', () =>
+      gsap.fromTo(shine, { x: '-100%' }, { x: '120%', duration: 0.38, ease: 'power1.inOut' })
+    );
+  });
+
+  // ─── SECTION EYEBROW WIPE-REVEALS ─────────────────────────────────────────
+  // A terracotta curtain covers each eyebrow label, then wipes away to reveal
+  // the text beneath — like wiping a label clean so you can read it.
+
+  gsap.utils.toArray<HTMLElement>('.wipe-reveal-parent').forEach((parent) => {
+    const curtain = parent.querySelector<HTMLElement>('.wipe-curtain');
+    if (!curtain) return;
+    // Start: curtain covers text (scaleX=1, visible)
+    gsap.set(curtain, { scaleX: 1, transformOrigin: 'left center' });
+    gsap.to(curtain, {
+      scaleX: 0,
+      transformOrigin: 'right center',
+      duration: 0.6,
+      ease: 'power2.inOut',
+      scrollTrigger: { trigger: parent, start: 'top 85%' },
+    });
+  });
+
+  // ─── SERVICES — squeegee scrub + receipt tape + price underlines ──────────
+
+  const servicesLeft = document.querySelector<HTMLElement>('.services-left');
+  const serviceRows = gsap.utils.toArray<HTMLElement>('.service-row');
+  const receiptTape = document.getElementById('receipt-tape');
+  const priceUnderlines = gsap.utils.toArray<HTMLElement>('.price-underline');
+  const squeegee = document.getElementById('squeegee');
+  const servicesList = document.querySelector<HTMLElement>('.services-list');
+
+  if (servicesLeft) {
+    gsap.fromTo(servicesLeft, { opacity: 0, y: 20 }, {
+      opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+      scrollTrigger: { trigger: '#services', start: 'top 75%' },
+    });
+  }
+
+  if (receiptTape) {
+    gsap.fromTo(receiptTape, { height: 0 }, {
+      height: 80, duration: 1.0, ease: 'power1.inOut',
+      scrollTrigger: { trigger: '#services', start: 'top 70%' },
+    });
+  }
+
+
+  gsap.fromTo(serviceRows, { opacity: 0, y: 20 }, {
+    opacity: 1, y: 0, duration: 0.55, stagger: 0.09, ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '#services', start: 'top 70%',
+      onEnter() {
+        setTimeout(() =>
+          gsap.to(priceUnderlines, { width: '100%', duration: 0.4, stagger: 0.09, ease: 'power2.out' })
+        , 450);
+      },
+    },
+  });
+
+  // ─── WHY US — cloth-toss numbers ─────────────────────────────────────────
+
+  const whyHeader = document.getElementById('why-header');
+  const whyCards = gsap.utils.toArray<HTMLElement>('.why-card');
+  const whyNums = gsap.utils.toArray<HTMLElement>('.why-num');
+  const whyLines = gsap.utils.toArray<HTMLElement>('.why-line');
+
+  const whyTl = gsap.timeline({ scrollTrigger: { trigger: '#why-us', start: 'top 70%' } });
+  if (whyHeader) whyTl.fromTo(whyHeader, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
+  whyTl.fromTo(whyCards, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.65, stagger: 0.12, ease: 'power2.out' }, '-=0.2');
+  whyTl.fromTo(whyNums, { opacity: 0, y: -18, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.12, ease: 'back.out(1.8)' }, '-=0.55');
+  whyTl.to(whyLines, { width: '2.5rem', opacity: 0.35, duration: 0.4, stagger: 0.1, ease: 'power2.out' }, '-=0.2');
+
+  // Scrub: why-us cards very gently shift upward as you scroll past (like items
+  // being lifted off a clean surface to inspect underneath)
+  whyCards.forEach((card) => {
+    gsap.to(card, {
+      y: -12,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 80%',
+        end: 'bottom 20%',
+        scrub: 1.5,
+      },
+    });
+  });
+
+  // ─── SERVICE AREAS — road draw ────────────────────────────────────────────
+
+  const road = document.getElementById('sukhumvit-road');
+  const dots = gsap.utils.toArray<HTMLElement>('.station-dot');
+  const areaLabels = gsap.utils.toArray<HTMLElement>('.areas-label');
+  const areaItems = gsap.utils.toArray<HTMLElement>('.area-item');
+
+  const mapTl = gsap.timeline({ scrollTrigger: { trigger: '#areas', start: 'top 65%' } });
+  if (road) mapTl.to(road, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' });
+  mapTl.to(dots, { scale: 1, duration: 0.3, stagger: 0.15, ease: 'back.out(2)', transformOrigin: 'center center' }, '-=0.4');
+  mapTl.fromTo(areaLabels, { opacity: 0 }, { opacity: 1, duration: 0.4, stagger: 0.1, ease: 'power2.out' }, '-=0.4');
+  gsap.fromTo(areaItems, { opacity: 0, y: 12 }, {
+    opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power2.out',
+    scrollTrigger: { trigger: '#areas', start: 'top 65%' },
+  });
+
+  // ─── TESTIMONIALS — quote-mark squeegee ───────────────────────────────────
+
+  const reviewsHeader = document.getElementById('reviews-header');
+  const testimonialCards = gsap.utils.toArray<HTMLElement>('.testimonial-card');
+  const quoteMarks = gsap.utils.toArray<HTMLElement>('.testimonial-quote-mark');
+  const disclaimer = document.getElementById('reviews-disclaimer');
+
+  const reviewsTl = gsap.timeline({ scrollTrigger: { trigger: '#reviews', start: 'top 70%' } });
+  if (reviewsHeader) reviewsTl.fromTo(reviewsHeader, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
+  reviewsTl.fromTo(testimonialCards, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.65, stagger: 0.12, ease: 'power2.out' }, '-=0.2');
+  reviewsTl.fromTo(quoteMarks, { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, stagger: 0.12, ease: 'power2.out' }, '-=0.5');
+  if (disclaimer) reviewsTl.fromTo(disclaimer, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power2.out' }, '-=0.1');
+
+  // ─── SCROLL STORY — scrub divider ────────────────────────────────────────
+  // The centerpiece. Scrolling physically drags the clean/dirty divider across
+  // the screen. 300vh of scroll = one very satisfying wipe.
+
+  const storyClean     = document.getElementById('story-clean');
+  const storyTextDirty = document.getElementById('story-text-dirty');
+  const storyTextClean = document.getElementById('story-text-clean');
+  const storyWipeEdge  = document.getElementById('story-wipe-edge');
+  const storyHint      = document.getElementById('story-hint');
+  const storyHintArrow = document.getElementById('story-hint-arrow');
+  const storyStats     = document.getElementById('story-stats');
+  const storyLabelAfter = document.getElementById('story-label-after');
+  const statHours  = document.getElementById('stat-hours');
+  const statVisits = document.getElementById('stat-visits');
+  const statRating = document.getElementById('stat-rating');
+
+  if (storyClean) {
+
+    if (storyHintArrow) {
+      gsap.to(storyHintArrow, { y: 6, duration: 0.7, repeat: -1, yoyo: true, ease: 'power1.inOut' });
+    }
+
+    ScrollTrigger.create({
+      trigger: '#story-pin-target',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.8,
+      onUpdate(self) {
+        const p = self.progress;
+        // divider position: starts at right (100%), sweeps to left (0%)
+        const pct = (1 - p) * 100;
+
+        // Clean background panel clips in from the right
+        storyClean.style.clipPath = `inset(0 0 0 ${pct}%)`;
+
+        // Dirty text: only show LEFT of divider
+        if (storyTextDirty) storyTextDirty.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+
+        // Clean text: only show RIGHT of divider
+        if (storyTextClean) storyTextClean.style.clipPath = `inset(0 0 0 ${pct}%)`;
+
+        // Wipe edge handle rides the divider
+        if (storyWipeEdge) storyWipeEdge.style.left = `${pct}%`;
+
+        if (storyHint) storyHint.style.opacity = String(Math.max(0, 1 - p * 8));
+
+        if (storyLabelAfter) {
+          storyLabelAfter.style.opacity = String(Math.min(1, Math.max(0, (p - 0.6) / 0.2)));
+        }
+
+        if (storyStats) {
+          const sp = Math.min(1, Math.max(0, (p - 0.65) / 0.25));
+          storyStats.style.opacity = String(sp);
+          if (statHours) statHours.textContent = String(Math.round(sp * 3));
+          if (statVisits) statVisits.textContent = String(Math.round(sp * 200));
+          if (statRating) statRating.textContent = (4 + sp * 0.9).toFixed(1);
+        }
+      },
+    });
+  }
+
+  // ─── FAQ — spray-and-wipe entrance ───────────────────────────────────────
+  // A mist of terracotta radiates from the top of the FAQ section,
+  // like someone just sprayed the surface before wiping.
+  // Then it evaporates. Very professional. Very hygienic.
+
+  const faqSpray = document.getElementById('faq-spray');
+  if (faqSpray) {
+    gsap.set(faqSpray, { scale: 0, opacity: 0 });
+    const faqTl = gsap.timeline({
+      scrollTrigger: { trigger: '#faq-wrapper', start: 'top 72%' },
+    });
+    faqTl
+      .to(faqSpray, { scale: 1, opacity: 1, duration: 0.45, ease: 'power2.out' })
+      .to(faqSpray, { opacity: 0, duration: 0.6, ease: 'power2.in' }, '+=0.2');
+  }
+
+  // ─── FINAL CTA — ink spread + mop sheen + word reveal ────────────────────
+
+  const inkSpread = document.getElementById('ink-spread');
+  const mopLines = gsap.utils.toArray<HTMLElement>('.mop-line');
+  const ctaWords = gsap.utils.toArray<HTMLElement>('#final-cta .cta-word');
+  const ctaItems = gsap.utils.toArray<HTMLElement>('#final-cta .cta-item');
+
+  const ctaTl = gsap.timeline({ scrollTrigger: { trigger: '#final-cta', start: 'top 72%' } });
+  if (inkSpread) {
+    ctaTl.fromTo(inkSpread, { scale: 0, borderRadius: '50%' }, { scale: 2.5, borderRadius: '0%', duration: 0.9, ease: 'power3.out' });
+  }
+  ctaTl.fromTo(mopLines, { scaleX: 0 }, { scaleX: 1, duration: 0.6, stagger: 0.06, ease: 'power1.inOut' }, '-=0.4');
+  ctaTl.fromTo(ctaWords, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' }, '-=0.3');
+  ctaTl.fromTo(ctaItems, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out' }, '-=0.2');
+
+  document.querySelectorAll<HTMLElement>('.cta-arrow-final').forEach((arrow) => {
+    const btn = arrow.closest('a');
+    if (!btn) return;
+    btn.addEventListener('mouseenter', () => gsap.to(arrow, { x: 5, duration: 0.18, ease: 'power2.out' }));
+    btn.addEventListener('mouseleave', () => gsap.to(arrow, { x: 0, duration: 0.18, ease: 'power2.in' }));
+  });
+
+}
+</script>

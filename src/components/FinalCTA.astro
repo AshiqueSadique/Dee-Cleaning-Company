@@ -1,0 +1,55 @@
+---
+import type enJson from '../i18n/en.json';
+type I18n = typeof enJson;
+
+export interface Props {
+  t: I18n;
+  lang: 'en' | 'th';
+}
+
+const { t, lang } = Astro.props;
+const headingWords = t.final_cta.heading.split(' ');
+---
+
+<section id="final-cta" class="relative bg-ink py-32 md:py-48 lg:py-56 overflow-hidden" aria-labelledby="final-cta-heading">
+
+  <!-- Ink-spread: expands from center like a drop of solution on a dark surface -->
+  <div id="ink-spread" aria-hidden="true"
+    style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#2a2a2a 0%,#1a1a1a 60%);transform:scale(0);transform-origin:center center;border-radius:50%;">
+  </div>
+
+  <!-- Faint mop-sheen lines — like a freshly mopped floor catching light -->
+  <div aria-hidden="true" class="absolute inset-0 pointer-events-none" style="opacity:0.04;">
+    {Array.from({ length: 7 }).map((_, i) => (
+      <div class="mop-line" style={`position:absolute;left:0;right:0;top:${12+i*14}%;height:1px;background:var(--paper);transform:scaleX(0);transform-origin:left center;`}></div>
+    ))}
+  </div>
+
+  <div class="container mx-auto px-6 md:px-10 lg:px-16 text-center relative z-10">
+
+    <p class="cta-item font-sans font-semibold text-xs tracking-widest uppercase text-paper mb-8">
+      {t.final_cta.eyebrow}
+    </p>
+
+    <h2 id="final-cta-heading" class="font-serif font-medium text-paper leading-tight mb-6"
+        style="font-size:clamp(2.5rem,8vw,7rem);" aria-label={t.final_cta.heading}>
+      {headingWords.map((word) => (
+        <span class="cta-word inline-block mr-[0.2em]" aria-hidden="true">{word}</span>
+      ))}
+    </h2>
+
+    <p class="cta-item font-serif italic text-gold text-2xl md:text-3xl mb-12">
+      {t.final_cta.sub}
+    </p>
+
+    <div class="cta-item flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href={`/${lang}/book`} class="btn-gold text-sm md:text-base px-8 py-3.5" aria-label={t.final_cta.cta_primary}>
+        {t.final_cta.cta_primary}<span class="cta-arrow-final inline-block ml-1" aria-hidden="true">→</span>
+      </a>
+      <a href={`/${lang}/book`} class="btn-paper-outline text-sm md:text-base px-8 py-3.5" aria-label={t.final_cta.cta_secondary}>
+        {t.final_cta.cta_secondary}
+      </a>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,49 @@
+---
+import type enJson from '../i18n/en.json';
+type I18n = typeof enJson;
+
+export interface Props {
+  t: I18n;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="reviews" class="py-24 md:py-32 bg-paper" aria-labelledby="reviews-heading">
+  <div class="container mx-auto px-6 md:px-10 lg:px-16">
+
+    <div class="mb-14" id="reviews-header">
+      <p class="section-num mb-2">{t.testimonials.section_num}</p>
+      <h2 id="reviews-heading" class="eyebrow">{t.testimonials.eyebrow}</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-0">
+      {t.testimonials.items.map((item, i) => (
+        <article
+          class={`testimonial-card py-10 ${i < t.testimonials.items.length - 1 ? 'md:border-r border-b md:border-b-0 border-line md:pr-10' : ''} ${i > 0 ? 'md:pl-10' : ''}`}
+          aria-label={`Testimonial from ${item.name}`}
+        >
+          <!-- Quote mark squeegees in from the left — a single horizontal stroke -->
+          <p class="testimonial-quote-mark font-serif italic text-terra leading-none mb-6 select-none"
+             style="font-size:4rem;line-height:0.8;" aria-hidden="true">
+            &ldquo;
+          </p>
+          <blockquote>
+            <p class="font-serif font-normal text-lg md:text-xl text-ink leading-relaxed mb-6">{item.quote}</p>
+            <footer class="border-t border-line pt-5">
+              <cite class="not-italic">
+                <span class="font-sans font-semibold text-sm text-ink block">{item.name}</span>
+                <span class="font-sans text-muted text-xs">{item.location}</span>
+              </cite>
+            </footer>
+          </blockquote>
+        </article>
+      ))}
+    </div>
+
+    <p class="font-sans text-muted text-xs mt-10 italic" id="reviews-disclaimer">
+      {t.testimonials.disclaimer}
+    </p>
+
+  </div>
+</section>

@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Hero from '../../components/Hero.astro';
+import TrustStrip from '../../components/TrustStrip.astro';
+import Services from '../../components/Services.astro';
+import PricingCalculator from '../../components/PricingCalculator';
+import WhyUs from '../../components/WhyUs.astro';
+import Gallery from '../../components/Gallery';
+import ServiceAreas from '../../components/ServiceAreas.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import FAQ from '../../components/FAQ';
+import FinalCTA from '../../components/FinalCTA.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/global.css';
+
+import t from '../../i18n/th.json';
+const lang = 'th';
+---
+
+<Base
+  title="ดี คลีนนิ่ง — บริการทำความสะอาดคอนโดพรีเมียม กรุงเทพฯ"
+  description="ทีมทำความสะอาดขนาดเล็ก ให้บริการคอนโดย่านสุขุมวิทและมักกะสัน พนักงานคนเดิม มีประกัน จองผ่าน LINE"
+  lang={lang}
+>
+  <Nav t={t} lang={lang} />
+  <main id="main-content" lang="th">
+    <Hero t={t} lang={lang} />
+    <TrustStrip t={t} />
+    <Services t={t} lang={lang} />
+
+    <!-- Pricing Calculator -->
+    <section class="py-16 md:py-20 bg-paper" aria-label="ประเมินราคา">
+      <div class="container mx-auto px-6 md:px-10 lg:px-16 max-w-2xl">
+        <PricingCalculator t={t.calculator} lang={lang} client:load />
+      </div>
+    </section>
+
+    <WhyUs t={t} />
+    <Gallery t={t.gallery} client:visible />
+    <ServiceAreas t={t} lang={lang} />
+    <Testimonials t={t} />
+    <FAQ t={t.faq} client:visible />
+    <FinalCTA t={t} lang={lang} />
+  </main>
+  <Footer t={t} lang={lang} />
+</Base>

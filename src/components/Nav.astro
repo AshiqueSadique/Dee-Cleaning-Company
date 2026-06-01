@@ -1,0 +1,239 @@
+---
+import type enJson from '../i18n/en.json';
+type I18n = typeof enJson;
+
+export interface Props {
+  t: I18n;
+  lang: 'en' | 'th';
+}
+
+const { t, lang } = Astro.props;
+const altLang = lang === 'en' ? 'th' : 'en';
+const altLangLabel = lang === 'en' ? 'ไทย' : 'EN';
+const currentPath = Astro.url.pathname;
+const basePath = currentPath.replace(`/${lang}`, '');
+---
+
+<nav
+  id="site-nav"
+  class="fixed top-0 left-0 right-0 z-50 transition-colors duration-300"
+  aria-label="Main navigation"
+>
+  <!--
+    Mop-stroke border: a terracotta line that wipes in left-to-right
+    the first time the user scrolls past the hero — like a mop being dragged
+    across the bottom of the nav. Extremely professional. Very hygienic.
+  -->
+  <span
+    id="nav-mop-border"
+    aria-hidden="true"
+    style="
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 1px;
+      width: 0;
+      background: var(--line);
+      pointer-events: none;
+    "
+  ></span>
+  <div class="nav-inner flex items-center justify-between px-6 md:px-10 lg:px-16 h-16 md:h-20">
+    <!-- Wordmark -->
+    <a href={`/${lang}/`} class="wordmark flex-shrink-0 leading-none" aria-label="Dee Cleaning Co. — Home">
+      <span class="font-serif font-medium text-sm md:text-base text-ink">
+        <em class="italic text-terra not-italic" style="font-style: italic;">Dee</em><br class="hidden sm:block" /><span class="sm:hidden"> </span>Cleaning Co.
+      </span>
+    </a>
+
+    <!-- Desktop nav links -->
+    <ul class="hidden md:flex items-center gap-8 lg:gap-12" role="list">
+      <li>
+        <a
+          href={`/${lang}/#services`}
+          class="font-sans font-medium text-sm text-ink hover:text-terra transition-colors duration-200"
+        >
+          {t.nav.services}
+        </a>
+      </li>
+      <li>
+        <a
+          href={`/${lang}/#areas`}
+          class="font-sans font-medium text-sm text-ink hover:text-terra transition-colors duration-200"
+        >
+          {t.nav.areas}
+        </a>
+      </li>
+      <li>
+        <a
+          href={`/${lang}/#reviews`}
+          class="font-sans font-medium text-sm text-ink hover:text-terra transition-colors duration-200"
+        >
+          {t.nav.reviews}
+        </a>
+      </li>
+      <li>
+        <a
+          href={`/${lang}/#faq`}
+          class="font-sans font-medium text-sm text-ink hover:text-terra transition-colors duration-200"
+        >
+          {t.nav.faq}
+        </a>
+      </li>
+    </ul>
+
+    <!-- Right actions -->
+    <div class="flex items-center gap-4 md:gap-5">
+      <!-- Language toggle -->
+      <div class="hidden sm:flex items-center gap-1 font-sans text-xs font-semibold tracking-wider" role="navigation" aria-label="Language switcher">
+        <span class={lang === 'en' ? 'text-terra border-b border-terra pb-0.5' : 'text-muted hover:text-terra transition-colors'}>
+          {lang === 'en' ? 'EN' : <a href={`/en${basePath || '/'}`} aria-label={t.nav.lang_toggle_label}>EN</a>}
+        </span>
+        <span class="text-line mx-0.5">|</span>
+        <span class={lang === 'th' ? 'text-terra border-b border-terra pb-0.5' : 'text-muted hover:text-terra transition-colors'}>
+          {lang === 'th' ? 'ไทย' : <a href={`/th${basePath || '/'}`} aria-label={t.nav.lang_toggle_label}>ไทย</a>}
+        </span>
+      </div>
+
+      <!-- Book on LINE CTA -->
+      <a
+        href={`/${lang}/book`}
+        class="hidden sm:inline-flex btn-terra text-xs md:text-sm"
+        aria-label={t.nav.book}
+      >
+        {t.nav.book}
+      </a>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="hamburger"
+        class="md:hidden flex flex-col gap-1.5 p-2 -mr-2"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span class="hamburger-line block w-5 h-px bg-ink transition-all duration-300"></span>
+        <span class="hamburger-line block w-5 h-px bg-ink transition-all duration-300"></span>
+        <span class="hamburger-line block w-4 h-px bg-ink transition-all duration-300"></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-40 bg-paper flex flex-col justify-center px-8 opacity-0 pointer-events-none transition-opacity duration-300"
+  aria-hidden="true"
+>
+  <button
+    id="mobile-close"
+    class="absolute top-5 right-6 p-2 font-serif text-2xl text-ink"
+    aria-label="Close menu"
+  >
+    ×
+  </button>
+
+  <nav aria-label="Mobile navigation">
+    <ul class="space-y-2" role="list">
+      {[
+        { href: `/${lang}/#services`, label: t.nav.services },
+        { href: `/${lang}/#areas`, label: t.nav.areas },
+        { href: `/${lang}/#reviews`, label: t.nav.reviews },
+        { href: `/${lang}/#faq`, label: t.nav.faq },
+      ].map((item) => (
+        <li class="mobile-nav-item opacity-0 translate-y-4">
+          <a
+            href={item.href}
+            class="font-serif text-4xl font-medium text-ink hover:text-terra transition-colors duration-200 block py-2"
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+      <li class="mobile-nav-item opacity-0 translate-y-4 pt-4">
+        <a
+          href={`/${lang}/book`}
+          class="btn-terra inline-flex"
+        >
+          {t.nav.book}
+        </a>
+      </li>
+      <li class="mobile-nav-item opacity-0 translate-y-4 pt-4">
+        <div class="flex items-center gap-3 font-sans text-sm font-semibold tracking-wider">
+          <a
+            href={`/en${basePath || '/'}`}
+            class={lang === 'en' ? 'text-terra border-b border-terra pb-0.5' : 'text-muted'}
+          >
+            EN
+          </a>
+          <span class="text-line">|</span>
+          <a
+            href={`/th${basePath || '/'}`}
+            class={lang === 'th' ? 'text-terra border-b border-terra pb-0.5' : 'text-muted'}
+          >
+            ไทย
+          </a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileClose = document.getElementById('mobile-close');
+  const mobileItems = document.querySelectorAll('.mobile-nav-item');
+
+  function openMenu() {
+    if (!mobileMenu || !hamburger) return;
+    mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced) {
+      gsap.to(mobileMenu, { opacity: 1, duration: 0.2 });
+      gsap.fromTo(
+        mobileItems,
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.07, ease: 'power2.out', delay: 0.1 }
+      );
+    } else {
+      gsap.set(mobileItems, { opacity: 1, y: 0 });
+    }
+  }
+
+  function closeMenu() {
+    if (!mobileMenu || !hamburger) return;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finish = () => {
+      mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    };
+    if (!prefersReduced) {
+      gsap.to(mobileMenu, { opacity: 0, duration: 0.2, onComplete: finish });
+    } else {
+      finish();
+    }
+  }
+
+  hamburger?.addEventListener('click', openMenu);
+  mobileClose?.addEventListener('click', closeMenu);
+
+  // Close on anchor click
+  mobileMenu?.querySelectorAll('a').forEach((a) => {
+    a.addEventListener('click', closeMenu);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileMenu?.getAttribute('aria-hidden') === 'false') {
+      closeMenu();
+    }
+  });
+</script>

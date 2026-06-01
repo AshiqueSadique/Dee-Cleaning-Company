@@ -1,0 +1,57 @@
+---
+import type enJson from '../i18n/en.json';
+type I18n = typeof enJson;
+
+export interface Props {
+  t: I18n;
+  lang: 'en' | 'th';
+}
+
+const { t, lang } = Astro.props;
+---
+
+<section id="services" class="py-24 md:py-32 bg-paper" aria-labelledby="services-heading">
+  <div class="container mx-auto px-6 md:px-10 lg:px-16">
+    <div class="grid md:grid-cols-2 gap-12 md:gap-20 lg:gap-28 items-start">
+
+      <div class="services-left">
+        <p class="section-num mb-2">{t.services.section_num}</p>
+        <p class="eyebrow mb-4 wipe-reveal-parent relative overflow-hidden">
+          <span class="wipe-text">{t.services.eyebrow}</span>
+          <span class="wipe-curtain" aria-hidden="true" style="position:absolute;inset:0;background:var(--terra);transform-origin:left center;"></span>
+        </p>
+        <h2 id="services-heading" class="font-serif font-medium text-3xl md:text-4xl lg:text-5xl text-ink leading-tight">
+          {t.services.heading}
+        </h2>
+        <p class="font-sans text-muted text-sm mt-8 leading-relaxed max-w-xs">
+          Use the estimator below to calculate your price instantly.
+        </p>
+        <!-- Receipt tape: prints downward like a till receipt -->
+        <div id="receipt-tape" aria-hidden="true" style="width:1px;height:0;background:var(--terra);margin-top:24px;opacity:0.3;"></div>
+      </div>
+
+      <div class="services-list">
+        {t.services.items.map((item, i) => (
+          <div class={`service-row py-6 ${i < t.services.items.length - 1 ? 'dotted-divider' : ''}`}>
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex-1">
+                <h3 class="font-serif font-medium text-lg md:text-xl text-ink mb-1.5">{item.name}</h3>
+                <p class="font-sans text-muted text-sm leading-relaxed">{item.desc}</p>
+              </div>
+              <div class="text-right flex-shrink-0 relative">
+                <span class="font-serif font-semibold text-lg md:text-xl text-terra block price-value relative">
+                  {item.price}
+                  <span class="price-underline" aria-hidden="true" style="position:absolute;left:0;bottom:-2px;height:1px;width:0;background:var(--terra);"></span>
+                </span>
+                {item.price_caption && (
+                  <span class="font-sans text-muted text-xs">{item.price_caption}</span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>

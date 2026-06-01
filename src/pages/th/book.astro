@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import BookingForm from '../../components/BookingForm';
+import '../../styles/global.css';
+
+import t from '../../i18n/th.json';
+const lang = 'th';
+
+const url = Astro.url;
+const initialService = url.searchParams.get('service') ?? undefined;
+const initialSize = url.searchParams.get('size') ?? undefined;
+const initialAddons = url.searchParams.get('addons') ?? undefined;
+---
+
+<Base
+  title="จองบริการ — ดี คลีนนิ่ง"
+  description="จองบริการทำความสะอาดคอนโดพรีเมียมในกรุงเทพฯ สามขั้นตอนง่ายๆ"
+  lang={lang}
+>
+  <Nav t={t} lang={lang} />
+  <main id="main-content" class="min-h-screen bg-paper pt-32 pb-24" lang="th">
+    <div class="container mx-auto px-6 max-w-xl">
+
+      <!-- Back link -->
+      <a
+        href={`/${lang}/`}
+        class="font-sans text-muted text-sm hover:text-terra transition-colors duration-200 inline-flex items-center gap-1 mb-10"
+        aria-label="กลับหน้าหลัก"
+      >
+        {t.booking.back}
+      </a>
+
+      <!-- Page header -->
+      <div class="mb-12">
+        <p class="eyebrow mb-3">{t.booking.eyebrow}</p>
+        <h1 class="font-serif font-medium text-3xl md:text-4xl text-ink mb-4 font-thai">
+          {t.booking.heading}
+        </h1>
+        <p class="font-sans text-muted text-base leading-relaxed font-thai">
+          {t.booking.subtext}
+        </p>
+      </div>
+
+      <!-- Booking form (React island) -->
+      <BookingForm
+        t={t.booking}
+        lang={lang}
+        initialService={initialService}
+        initialSize={initialSize}
+        initialAddons={initialAddons}
+        client:load
+      />
+
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+</Base>

@@ -1,0 +1,231 @@
+{
+  "lang": "en",
+  "nav": {
+    "services": "Services",
+    "areas": "Areas",
+    "reviews": "Reviews",
+    "faq": "FAQ",
+    "book": "Book on LINE",
+    "lang_toggle_label": "Switch to Thai"
+  },
+  "hero": {
+    "eyebrow": "PREMIUM CONDO CLEANING · BANGKOK",
+    "wordmark_dee": "Dee",
+    "wordmark_rest": "Cleaning Co.",
+    "tagline": "One soi at a time.",
+    "sub_tagline": "A small cleaning team serving Sukhumvit & Makkasan condos.",
+    "cta_primary": "Book on LINE",
+    "cta_secondary": "See services"
+  },
+  "trust": {
+    "pills": ["INSURED", "UNIFORMED", "SAME CLEANER", "ENGLISH SPEAKING"]
+  },
+  "services": {
+    "section_num": "i.",
+    "eyebrow": "SERVICES & PRICING",
+    "heading": "Five ways we keep your home spotless.",
+    "items": [
+      {
+        "name": "Standard Clean — Studio",
+        "desc": "Under 50 sqm · 2 hours · supplies included",
+        "price": "฿650",
+        "price_caption": "per visit"
+      },
+      {
+        "name": "Standard Clean — 1–2 Bed",
+        "desc": "50–80 sqm · 3 hours · supplies included",
+        "price": "฿950",
+        "price_caption": "per visit"
+      },
+      {
+        "name": "Deep Clean",
+        "desc": "Kitchen, bath, appliances, behind furniture",
+        "price": "From ฿2,200",
+        "price_caption": ""
+      },
+      {
+        "name": "Move-In / Move-Out",
+        "desc": "Empty unit, top-to-bottom, photos provided",
+        "price": "From ฿2,800",
+        "price_caption": ""
+      },
+      {
+        "name": "Monthly Plan · 4 visits",
+        "desc": "Save 10% · same cleaner every time",
+        "price": "฿2,400",
+        "price_caption": "/ month"
+      }
+    ]
+  },
+  "calculator": {
+    "title": "Estimate your clean in 10 seconds.",
+    "size_label": "Size",
+    "sizes": ["Under 50 sqm", "50–80 sqm", "80+ sqm"],
+    "type_label": "Service",
+    "types": ["Standard", "Deep Clean", "Monthly Plan"],
+    "addons_label": "Add-ons",
+    "addons": [
+      { "label": "Inside fridge", "price": 200 },
+      { "label": "Inside oven", "price": 200 },
+      { "label": "Windows", "price": 300 },
+      { "label": "Laundry & ironing", "price": 400 }
+    ],
+    "estimated_caption": "estimated",
+    "note": "Final price confirmed on LINE.",
+    "cta": "Book this on LINE →"
+  },
+  "why_us": {
+    "section_num": "ii.",
+    "eyebrow": "WHY DEE CLEANING CO.",
+    "items": [
+      {
+        "num": "01",
+        "title": "Same cleaner, every visit.",
+        "body": "No rotating strangers. You'll know your cleaner by name — and they'll know your home, your preferences, where you keep the spare cloths."
+      },
+      {
+        "num": "02",
+        "title": "Fully insured.",
+        "body": "Third-party liability insurance on every clean. Policy details available on request."
+      },
+      {
+        "num": "03",
+        "title": "Direct booking on LINE.",
+        "body": "Message us directly. Confirmation within 30 minutes — no app, no middleman, no surprise fees."
+      },
+      {
+        "num": "04",
+        "title": "Bilingual team.",
+        "body": "English and Thai. We serve expat and Thai residents with the same care."
+      }
+    ]
+  },
+  "gallery": {
+    "section_num": "iii.",
+    "eyebrow": "THE WORK",
+    "before_label": "BEFORE",
+    "after_label": "AFTER",
+    "replace_note": "REPLACE WITH PHOTO",
+    "slides": [
+      "Asoke condo, 1-bed, standard clean",
+      "Phrom Phong condo, studio, deep clean",
+      "Thonglor condo, 2-bed, move-in clean",
+      "Ekkamai condo, 1-bed, standard clean",
+      "Makkasan condo, studio, monthly plan",
+      "Asoke condo, 2-bed, deep clean"
+    ]
+  },
+  "areas": {
+    "section_num": "iv.",
+    "eyebrow": "WHERE WE CLEAN",
+    "stations": ["Asoke", "Phrom Phong", "Thonglor", "Ekkamai", "Makkasan"],
+    "note": "Don't see your soi? Message us — we may serve nearby.",
+    "list_heading": "Areas we serve"
+  },
+  "testimonials": {
+    "section_num": "v.",
+    "eyebrow": "WHAT RESIDENTS SAY",
+    "items": [
+      {
+        "quote": "Came home to my apartment looking better than when I moved in. Same cleaner every week now.",
+        "name": "Anna K.",
+        "location": "Asoke condo"
+      },
+      {
+        "quote": "They actually know my building — even the back service entrance. Saves me so much explaining.",
+        "name": "Khun Pim",
+        "location": "Phrom Phong"
+      },
+      {
+        "quote": "Booked via LINE in 10 minutes. No app. No subscription. Just a clean apartment.",
+        "name": "David M.",
+        "location": "Thonglor"
+      }
+    ],
+    "disclaimer": "Real reviews coming soon — we just launched."
+  },
+  "faq": {
+    "section_num": "vi.",
+    "eyebrow": "FREQUENTLY ASKED",
+    "items": [
+      {
+        "q": "Are you insured?",
+        "a": "Yes. We carry third-party liability insurance on every clean. If anything is ever damaged during a visit, we handle it professionally. Policy details are available on request."
+      },
+      {
+        "q": "Do you bring your own supplies?",
+        "a": "Yes, all cleaning supplies and equipment are included in the price. If you'd prefer we use specific products — or need eco-friendly supplies — just let us know when booking."
+      },
+      {
+        "q": "What if I'm not happy with the clean?",
+        "a": "Message us on LINE within 24 hours and we'll return to fix any area you're not satisfied with, at no extra charge. We'd rather spend an extra 30 minutes than lose your trust."
+      },
+      {
+        "q": "Can I request the same cleaner each visit?",
+        "a": "That's exactly how we work. Your cleaner learns your home over time — your preferences, your space, your quirks. We don't rotate staff on your unit without good reason."
+      },
+      {
+        "q": "How do I pay?",
+        "a": "Cash on the day of your clean, or bank transfer beforehand. We'll confirm payment details when you book via LINE. No in-app payments, no subscription traps."
+      },
+      {
+        "q": "What areas do you serve?",
+        "a": "Sukhumvit (Asoke, Phrom Phong, Thonglor, Ekkamai) and Makkasan. If you're just outside these areas, message us — we may be able to help depending on schedule."
+      },
+      {
+        "q": "Do your cleaners speak English?",
+        "a": "Yes. Our team is bilingual (English and Thai), so expat residents and Thai residents are served with equal care. You'll never need to use hand gestures to explain what you need."
+      },
+      {
+        "q": "How do I cancel or reschedule?",
+        "a": "Message us on LINE at least 24 hours before your booking and we'll reschedule with no fee. Cancellations with less than 24 hours notice may incur a small fee for the cleaner's travel time."
+      }
+    ]
+  },
+  "final_cta": {
+    "eyebrow": "READY WHEN YOU ARE",
+    "heading": "Let's clean your soi.",
+    "sub": "Dee",
+    "cta_primary": "Book on LINE",
+    "cta_secondary": "Build a custom quote"
+  },
+  "footer": {
+    "tagline": "One soi at a time.",
+    "tagline_thai": "สะอาดทีละซอย",
+    "contact_heading": "Get in touch",
+    "line_id": "@deecleaning",
+    "phone": "+66 (0) 00 000 0000",
+    "email": "hello@deecleaning.com",
+    "areas_heading": "Areas served",
+    "areas": ["Asoke", "Phrom Phong", "Thonglor", "Ekkamai", "Makkasan"],
+    "copyright": "© 2025 Dee Cleaning Co.",
+    "built": "Built in Bangkok",
+    "book_link": "Book a clean"
+  },
+  "booking": {
+    "back": "← Back to home",
+    "eyebrow": "BOOK A CLEAN",
+    "heading": "Three quick questions.",
+    "subtext": "We'll open LINE with your selections pre-filled. Reply with any details, we confirm within 30 minutes.",
+    "step1_heading": "What service do you need?",
+    "step2_heading": "Your unit size & area.",
+    "step3_heading": "When works for you?",
+    "next": "Next →",
+    "submit": "Open LINE to confirm →",
+    "size_label": "Unit size",
+    "area_label": "Your area",
+    "areas_options": ["Asoke", "Phrom Phong", "Thonglor", "Ekkamai", "Makkasan", "Other"],
+    "time_label": "Preferred time",
+    "times": ["Morning 8–11am", "Midday 11am–2pm", "Afternoon 2–5pm"],
+    "date_label": "Preferred date",
+    "notes_label": "Anything else?",
+    "notes_placeholder": "e.g. 'have a cat', 'need eco supplies'",
+    "services": [
+      { "id": "studio", "name": "Standard Clean — Studio", "desc": "Under 50 sqm", "price": "฿650 per visit" },
+      { "id": "1-2bed", "name": "Standard Clean — 1–2 Bed", "desc": "50–80 sqm", "price": "฿950 per visit" },
+      { "id": "deep", "name": "Deep Clean", "desc": "Kitchen, bath, appliances", "price": "From ฿2,200" },
+      { "id": "move", "name": "Move-In / Move-Out", "desc": "Full unit, photos provided", "price": "From ฿2,800" },
+      { "id": "monthly", "name": "Monthly Plan", "desc": "4 visits, same cleaner", "price": "฿2,400 / month" }
+    ]
+  }
+}

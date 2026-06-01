@@ -1,0 +1,156 @@
+---
+---
+
+<style>
+  @keyframes dust-float {
+    0%   { transform: translateY(0px) rotate(0deg); opacity: 0; }
+    15%  { opacity: 1; }
+    85%  { opacity: 0.7; }
+    100% { transform: translateY(-120px) rotate(180deg); opacity: 0; }
+  }
+  @keyframes smear-pulse {
+    0%, 100% { opacity: 0.18; }
+    50%       { opacity: 0.28; }
+  }
+  @keyframes grime-breathe {
+    0%, 100% { opacity: 0.12; }
+    50%       { opacity: 0.22; }
+  }
+  @keyframes hint-bob {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(6px); }
+  }
+  .dust-mote {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: dust-float linear infinite;
+  }
+  .smear {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: smear-pulse ease-in-out infinite;
+  }
+  .grime-blob {
+    position: absolute;
+    pointer-events: none;
+    animation: grime-breathe ease-in-out infinite;
+  }
+  .fingerprint {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.13;
+    border-radius: 50%;
+    border: 2px solid #6a5e52;
+  }
+</style>
+
+<section id="scroll-story" aria-label="Before and after cleaning story">
+  <div id="story-pin-target" style="height:300vh;position:relative;">
+    <div id="story-sticky" style="position:sticky;top:0;height:100vh;overflow:hidden;">
+
+      <!-- ── DIRTY PANEL (always behind, full viewport) ── -->
+      <div id="story-dirty" style="position:absolute;inset:0;background:#c4bab0;">
+        <!-- Grime texture -->
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 30% 70%, rgba(90,70,50,0.18) 0%, transparent 70%),radial-gradient(ellipse 60% 80% at 80% 20%, rgba(100,80,55,0.14) 0%, transparent 65%);pointer-events:none;"></div>
+        <!-- Smears -->
+        <div class="smear" style="width:280px;height:90px;background:rgba(90,70,50,0.22);top:12%;left:5%;transform:rotate(-8deg);filter:blur(18px);animation-duration:4.2s;"></div>
+        <div class="smear" style="width:320px;height:50px;background:rgba(100,75,50,0.15);bottom:18%;left:20%;transform:rotate(-3deg);filter:blur(22px);animation-duration:6s;animation-delay:-1s;"></div>
+        <!-- Corner grime -->
+        <div class="grime-blob" style="width:220px;height:200px;background:radial-gradient(circle,rgba(80,60,40,0.25) 0%,transparent 70%);top:-40px;left:-40px;filter:blur(8px);animation-duration:7s;"></div>
+        <div class="grime-blob" style="width:180px;height:160px;background:radial-gradient(circle,rgba(90,65,42,0.2) 0%,transparent 70%);bottom:-30px;right:-30px;filter:blur(8px);animation-duration:5.5s;animation-delay:-3s;"></div>
+        <!-- Fingerprints -->
+        <div class="fingerprint" style="width:38px;height:50px;top:22%;left:18%;transform:rotate(20deg);"></div>
+        <div class="fingerprint" style="width:22px;height:30px;top:22%;left:21%;transform:rotate(20deg);opacity:0.08;border-width:1px;"></div>
+        <div class="fingerprint" style="width:32px;height:44px;top:65%;left:12%;transform:rotate(-15deg);"></div>
+        <!-- Dust motes -->
+        <div class="dust-mote" style="width:5px;height:5px;background:rgba(110,90,60,0.55);left:15%;top:70%;animation-duration:5.2s;"></div>
+        <div class="dust-mote" style="width:3px;height:3px;background:rgba(130,100,70,0.5);left:28%;top:55%;animation-duration:7.1s;animation-delay:-1.2s;"></div>
+        <div class="dust-mote" style="width:4px;height:4px;background:rgba(90,72,50,0.6);left:8%;top:45%;animation-duration:6.6s;animation-delay:-4s;"></div>
+        <!-- Hair strands -->
+        <div style="position:absolute;top:38%;left:15%;width:120px;height:1px;background:rgba(60,45,30,0.25);transform:rotate(22deg);border-radius:2px;pointer-events:none;"></div>
+        <!-- Label -->
+        <div style="position:absolute;top:20px;left:24px;font-family:'Manrope',sans-serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(90,72,52,0.45);pointer-events:none;">Last cleaned: ???</div>
+      </div>
+
+      <!-- ── CLEAN PANEL (clips in from right on scroll) ── -->
+      <div id="story-clean" style="position:absolute;inset:0;background:#f6f1e7;clip-path:inset(0 0 0 100%);">
+        <!-- Label -->
+        <div style="position:absolute;top:20px;right:24px;font-family:'Manrope',sans-serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(184,92,60,0.45);pointer-events:none;">Just cleaned ✓</div>
+      </div>
+
+      <!--
+        ── SHARED CONTENT BLOCK ──
+        Sits above both panels. Uses clip-path to show the DIRTY version
+        on the left of the divider and the CLEAN version on the right.
+        Both clones are absolutely positioned on top of each other —
+        each is clipped to its own side so they never visually overlap.
+      -->
+
+      <!-- DIRTY text: visible only to the LEFT of the divider line -->
+      <!-- At progress=0, divider is at 100% right, so dirty text right-inset=0% (fully visible) -->
+      <div id="story-text-dirty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;pointer-events:none;z-index:5;clip-path:inset(0 0% 0 0);">
+        <div>
+          <p style="font-family:'Manrope',sans-serif;font-weight:700;font-size:9px;letter-spacing:0.45em;text-transform:uppercase;color:#6a5e52;margin-bottom:20px;">BEFORE</p>
+          <p style="font-family:'Fraunces',serif;font-size:clamp(4rem,12vw,10rem);line-height:0.85;color:#857568;letter-spacing:-0.02em;user-select:none;">dirty</p>
+          <div style="margin-top:36px;display:flex;gap:52px;justify-content:center;">
+            <div>
+              <p style="font-family:'Fraunces',serif;font-size:2rem;color:#857568;line-height:1;">3h</p>
+              <p style="font-family:'Manrope',sans-serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:#6a5e52;margin-top:6px;">wasted</p>
+            </div>
+            <div>
+              <p style="font-family:'Fraunces',serif;font-size:2rem;color:#857568;line-height:1;">∞</p>
+              <p style="font-family:'Manrope',sans-serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:#6a5e52;margin-top:6px;">stress</p>
+            </div>
+          </div>
+          <p style="font-family:'Fraunces',serif;font-style:italic;font-size:1rem;color:#6a5e52;line-height:1.7;max-width:220px;margin:44px auto 0;">"Spent my Sunday cleaning. Again."</p>
+        </div>
+      </div>
+
+      <!-- CLEAN text: visible only to the RIGHT of the divider line -->
+      <!-- At progress=0, divider is at 100% right, so clean text left-inset=100% (fully hidden) -->
+      <div id="story-text-clean" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;pointer-events:none;z-index:5;clip-path:inset(0 0 0 100%);">
+        <div>
+          <p style="font-family:'Manrope',sans-serif;font-weight:700;font-size:9px;letter-spacing:0.45em;text-transform:uppercase;color:#b85c3c;margin-bottom:20px;">AFTER</p>
+          <p style="font-family:'Fraunces',serif;font-style:italic;font-size:clamp(4rem,12vw,10rem);line-height:0.85;color:#b85c3c;letter-spacing:-0.02em;user-select:none;">Dee.</p>
+          <div id="story-stats" style="margin-top:36px;display:flex;gap:44px;justify-content:center;opacity:0;">
+            <div>
+              <p style="font-family:'Fraunces',serif;font-weight:600;font-size:2rem;color:#b85c3c;line-height:1;"><span id="stat-hours">0</span>h</p>
+              <p style="font-family:'Manrope',sans-serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:#5a5147;margin-top:6px;">saved weekly</p>
+            </div>
+            <div>
+              <p style="font-family:'Fraunces',serif;font-weight:600;font-size:2rem;color:#b85c3c;line-height:1;"><span id="stat-visits">0</span>+</p>
+              <p style="font-family:'Manrope',sans-serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:#5a5147;margin-top:6px;">cleans done</p>
+            </div>
+            <div>
+              <p style="font-family:'Fraunces',serif;font-weight:600;font-size:2rem;color:#b85c3c;line-height:1;"><span id="stat-rating">0.0</span></p>
+              <p style="font-family:'Manrope',sans-serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:#5a5147;margin-top:6px;">avg rating</p>
+            </div>
+          </div>
+          <p id="story-label-after" style="font-family:'Fraunces',serif;font-style:italic;font-size:1rem;color:#1a1a1a;line-height:1.7;max-width:220px;margin:44px auto 0;opacity:0;">Same cleaner.<br/>Same standard.<br/><em style="color:#b85c3c;">Every time.</em></p>
+        </div>
+      </div>
+
+      <!-- Wipe edge: rides the divider -->
+      <div id="story-wipe-edge" style="position:absolute;top:0;bottom:0;left:100%;width:3px;background:#b85c3c;z-index:10;pointer-events:none;">
+        <div style="position:absolute;top:50%;left:0;transform:translate(-50%,-50%);width:44px;height:44px;background:#b85c3c;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 16px rgba(184,92,60,0.45);">
+          <span style="color:#f6f1e7;font-size:11px;user-select:none;">◀▶</span>
+        </div>
+      </div>
+
+      <!-- Scroll hint -->
+      <div id="story-hint" style="position:absolute;bottom:36px;left:0;right:0;text-align:center;z-index:30;pointer-events:none;">
+        <p style="font-family:'Manrope',sans-serif;font-weight:600;font-size:8px;letter-spacing:0.45em;text-transform:uppercase;color:#8a7e72;">scroll to clean</p>
+        <div id="story-hint-arrow" style="margin-top:8px;color:#b85c3c;font-size:14px;animation:hint-bob 1.4s ease-in-out infinite;">↓</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Exit -->
+  <div style="background:#f6f1e7;text-align:center;padding:80px 24px;border-top:1px solid #c9bea6;">
+    <p style="font-family:'Manrope',sans-serif;font-weight:700;font-size:8px;letter-spacing:0.45em;text-transform:uppercase;color:#b85c3c;margin-bottom:20px;">THE RESULT</p>
+    <p style="font-family:'Fraunces',serif;font-size:clamp(1.5rem,4vw,3rem);color:#1a1a1a;max-width:560px;margin:0 auto;line-height:1.25;">A home that looks like it did the day you moved in.</p>
+  </div>
+</section>

@@ -1,0 +1,59 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+  lang?: 'en' | 'th';
+  ogImage?: string;
+}
+
+const {
+  title = 'Dee Cleaning Co. — Premium Condo Cleaning Bangkok',
+  description = 'A small cleaning team serving Sukhumvit & Makkasan condos. Same cleaner, fully insured, book on LINE.',
+  lang = 'en',
+  ogImage,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://deecleaning.com');
+---
+
+<!doctype html>
+<html lang={lang} class={lang === 'th' ? 'font-thai' : ''}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Fonts: preload critical -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon placeholder -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>{title}</title>
+  </head>
+  <body class="bg-paper text-ink overflow-x-hidden">
+    <!-- Scroll progress bar: fills like a cleaning task being completed -->
+    <div
+      id="scroll-progress"
+      aria-hidden="true"
+      style="position:fixed;top:0;left:0;height:2px;width:0%;background:var(--terra);z-index:9999;pointer-events:none;transform-origin:left center;"
+    ></div>
+    <slot />
+  </body>
+</html>
