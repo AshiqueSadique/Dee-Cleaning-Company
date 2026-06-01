@@ -226,6 +226,61 @@
       { "id": "deep", "name": "Deep Clean", "desc": "Kitchen, bath, appliances", "price": "From ฿2,200" },
       { "id": "move", "name": "Move-In / Move-Out", "desc": "Full unit, photos provided", "price": "From ฿2,800" },
       { "id": "monthly", "name": "Monthly Plan", "desc": "4 visits, same cleaner", "price": "฿2,400 / month" }
-    ]
+    ],
+    "step1": {
+      "heading": "First, who should we LINE back?",
+      "subtext": "We use this to confirm your booking. No marketing, no spam.",
+      "nameLabel": "NAME",
+      "phonelabel": "PHONE",
+      "emailLabel": "EMAIL · OPTIONAL",
+      "namePlaceholder": "Your name",
+      "phonePlaceholder": "+66 8X XXX XXXX",
+      "emailPlaceholder": "you@example.com"
+    },
+    "step2": {
+      "heading": "What needs cleaning?",
+      "subtext": "Tell us the basics. Add anything else in the notes.",
+      "sizeLabel": "APARTMENT SIZE",
+      "areaLabel": "NEIGHBORHOOD",
+      "notesLabel": "NOTES · OPTIONAL",
+      "notesPlaceholder": "Pets, allergies, eco supplies, parking instructions...",
+      "sizeSmall": "Under 50 sqm",
+      "sizeMedium": "50–80 sqm",
+      "sizeLarge": "80+ sqm",
+      "areas": ["Asoke", "Phrom Phong", "Thonglor", "Ekkamai", "Makkasan", "Other"]
+    },
+    "step3": {
+      "heading": "When would you like us?",
+      "subtext": "Your preferred time. We'll confirm via LINE within 2 hours.",
+      "dateLabel": "PREFERRED DATE",
+      "slotLabel": "PREFERRED TIME",
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening",
+      "morningTime": "9 AM – 12 PM",
+      "afternoonTime": "1 PM – 4 PM",
+      "eveningTime": "5 PM – 8 PM",
+      "preferenceNote": "Any time slot is a preference — we'll confirm what works on LINE.",
+      "chosen": "✓ chosen"
+    },
+    "step4": {
+      "heading": "Request received.",
+      "subtext": "We've saved your details. Next: confirm on LINE.",
+      "summaryLabel": "Your booking summary",
+      "lineButton": "Open LINE to chat now →",
+      "callFallback": "Or call us at +66 (0) 00 000 0000",
+      "errorMessage": "We couldn't save your request just now — please tap below to message us on LINE directly. We'll handle it from there.",
+      "lineConfirm1": "We'll LINE you within 2 hours to confirm your slot and final price.",
+      "lineConfirm2": "In a hurry? Tap the button below to open LINE with your details pre-filled.",
+      "serviceLabel": "SERVICE",
+      "sizeLabel": "SIZE",
+      "areaLabel": "AREA",
+      "whenLabel": "WHEN",
+      "nameLabel": "NAME",
+      "phoneLabel": "PHONE",
+      "notesLabel": "NOTES"
+    },
+    "submitRequest": "Submit request →",
+    "submitting": "Sending..."
   }
 }

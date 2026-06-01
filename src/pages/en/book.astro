@@ -8,21 +8,17 @@ import '../../styles/global.css';
 import t from '../../i18n/en.json';
 const lang = 'en';
 
-// Parse URL params for pre-fill
-const url = Astro.url;
-const initialService = url.searchParams.get('service') ?? undefined;
-const initialSize = url.searchParams.get('size') ?? undefined;
-const initialAddons = url.searchParams.get('addons') ?? undefined;
+const webhookUrl = import.meta.env.PUBLIC_BOOKINGS_WEBHOOK_URL ?? '';
 ---
 
 <Base
   title="Book a Clean — Dee Cleaning Co."
-  description="Book a premium condo cleaning in Bangkok. Three quick steps."
+  description="Book a premium condo cleaning in Bangkok. Four quick steps."
   lang={lang}
 >
   <Nav t={t} lang={lang} />
   <main id="main-content" class="min-h-screen bg-paper pt-32 pb-24">
-    <div class="container mx-auto px-6 max-w-xl">
+    <div class="container mx-auto px-6 max-w-2xl">
 
       <!-- Back link -->
       <a
@@ -46,11 +42,9 @@ const initialAddons = url.searchParams.get('addons') ?? undefined;
 
       <!-- Booking form (React island) -->
       <BookingForm
-        t={t.booking}
+        t={t}
         lang={lang}
-        initialService={initialService}
-        initialSize={initialSize}
-        initialAddons={initialAddons}
+        webhookUrl={webhookUrl}
         client:load
       />
 
