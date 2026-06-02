@@ -1,0 +1,108 @@
+---
+export const prerender = false;
+import { checkAuth } from '../../lib/auth';
+import { getBookings } from '../../lib/sheets';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+
+if (!checkAuth(Astro.request)) return Astro.redirect('/admin/login');
+
+const bookings = await getBookings();
+const filter = Astro.url.searchParams.get('status') || 'all';
+let filtered = filter === 'all' ? [...bookings] : bookings.filter(b => b.status.toLowerCase() === filter.toLowerCase());
+filtered.sort((a, b) => b.rowIndex - a.rowIndex);
+
+const pending = bookings.filter(b => b.status === 'Pending' || b.status === '').length;
+
+function statusColor(status: string) {
+  switch ((status || 'Pending').toLowerCase()) {
+    case 'confirmed': return { bg: '#d1fae5', color: '#065f46' };
+    case 'completed': return { bg: '#e5e7eb', color: '#374151' };
+    case 'declined':  return { bg: '#fee2e2', color: '#991b1b' };
+    default:          return { bg: '#fef3c7', color: '#92400e' };
+  }
+}
+
+const tabs = ['all', 'pending', 'confirmed', 'completed', 'declined'];
+---
+<AdminLayout title="Bookings">
+  <a slot="header-actions" href="/admin/staff" style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;color:#b85c3c;text-decoration:none;">
+    Manage Staff →
+  </a>
+
+  <!-- Stats -->
+  <div style="display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap;">
+    <div style="background:#1a1a1a;color:#f6f1e7;padding:20px 28px;min-width:140px;">
+      <div style="font-size:32px;font-family:'Fraunces',serif;font-weight:400;">{bookings.length}</div>
+      <div style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c9bea6;margin-top:4px;">Total</div>
+    </div>
+    <div style="background:#fef3c7;color:#92400e;padding:20px 28px;min-width:140px;">
+      <div style="font-size:32px;font-family:'Fraunces',serif;font-weight:400;">{pending}</div>
+      <div style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#b45309;margin-top:4px;">Pending</div>
+    </div>
+    <div style="background:#d1fae5;color:#065f46;padding:20px 28px;min-width:140px;">
+      <div style="font-size:32px;font-family:'Fraunces',serif;font-weight:400;">{bookings.filter(b=>b.status==='Confirmed').length}</div>
+      <div style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#047857;margin-top:4px;">Confirmed</div>
+    </div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid #c9bea6;">
+    {tabs.map(tab => (
+      <a
+        href={`/admin/bookings?status=${tab}`}
+        style={`padding:10px 20px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;text-decoration:none;border-bottom:2px solid ${filter===tab?'#b85c3c':'transparent'};color:${filter===tab?'#b85c3c':'#6a5e52'};transition:color 0.15s;`}
+      >
+        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+      </a>
+    ))}
+  </div>
+
+  <!-- Table -->
+  {filtered.length === 0 ? (
+    <div style="text-align:center;padding:60px;color:#6a5e52;font-style:italic;">No bookings found.</div>
+  ) : (
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#1a1a1a;color:#c9bea6;">
+            <th style="padding:12px 16px;text-align:left;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;white-space:nowrap;">Ref</th>
+            <th style="padding:12px 16px;text-align:left;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;">Name</th>
+            <th style="padding:12px 16px;text-align:left;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;">Service</th>
+            <th style="padding:12px 16px;text-align:left;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;">Area</th>
+            <th style="padding:12px 16px;text-align:left;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;white-space:nowrap;">Date</th>
+            <th style="padding:12px 16px;text-align:left;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;">Slot</th>
+            <th style="padding:12px 16px;text-align:left;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;">Status</th>
+            <th style="padding:12px 16px;text-align:left;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;">Cleaner</th>
+            <th style="padding:12px 16px;text-align:center;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map((b, i) => {
+            const sc = statusColor(b.status);
+            return (
+              <tr style={`background:${i%2===0?'#faf7f0':'#f6f1e7'};border-bottom:1px solid #e8e0d0;`}>
+                <td style="padding:12px 16px;font-family:'Fraunces',serif;font-size:12px;color:#b85c3c;white-space:nowrap;">{b.bookingRef || '—'}</td>
+                <td style="padding:12px 16px;font-weight:600;">{b.name || '—'}</td>
+                <td style="padding:12px 16px;color:#4a4035;">{b.service || '—'}</td>
+                <td style="padding:12px 16px;color:#4a4035;">{b.area || '—'}</td>
+                <td style="padding:12px 16px;white-space:nowrap;color:#4a4035;">{b.date || '—'}</td>
+                <td style="padding:12px 16px;color:#4a4035;">{b.slot || '—'}</td>
+                <td style="padding:12px 16px;">
+                  <span style={`display:inline-block;padding:3px 10px;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;background:${sc.bg};color:${sc.color};`}>
+                    {b.status || 'Pending'}
+                  </span>
+                </td>
+                <td style="padding:12px 16px;color:#4a4035;font-size:12px;">{b.assignedCleaner || '—'}</td>
+                <td style="padding:12px 16px;text-align:center;">
+                  <a href={`/admin/bookings/${b.bookingRef}`} style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;font-weight:700;color:#b85c3c;text-decoration:none;white-space:nowrap;">
+                    View →
+                  </a>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  )}
+</AdminLayout>

@@ -1,0 +1,93 @@
+---
+export interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{title} · Dee Cleaning Co. Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Manrope', sans-serif; background: #f0ebe0; color: #1a1a1a; min-height: 100vh; }
+    nav {
+      background: #1a1a1a;
+      color: #f6f1e7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand {
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      color: #f6f1e7;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .nav-brand span { color: #b85c3c; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a {
+      color: #c9bea6;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #f6f1e7; }
+    .nav-links a.logout { color: #b85c3c; }
+    .nav-links a.logout:hover { color: #d97a5a; }
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 32px;
+    }
+    .page-header {
+      margin-bottom: 32px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .page-title {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      font-weight: 400;
+      color: #1a1a1a;
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      main { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/admin/bookings" class="nav-brand">Dee Cleaning Co. <span>· Admin</span></a>
+    <div class="nav-links">
+      <a href="/admin/bookings" class={Astro.url.pathname.includes('/bookings') ? 'active' : ''}>Bookings</a>
+      <a href="/admin/staff" class={Astro.url.pathname.includes('/staff') ? 'active' : ''}>Staff</a>
+      <a href="/admin/logout" class="logout">Logout →</a>
+    </div>
+  </nav>
+  <main>
+    <div class="page-header">
+      <h1 class="page-title">{title}</h1>
+      <slot name="header-actions" />
+    </div>
+    <slot />
+  </main>
+</body>
+</html>

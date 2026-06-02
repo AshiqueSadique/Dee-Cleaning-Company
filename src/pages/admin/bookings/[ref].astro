@@ -1,0 +1,211 @@
+---
+export const prerender = false;
+import { checkAuth } from '../../../lib/auth';
+import { getBookingByRef, getStaff, updateBooking } from '../../../lib/sheets';
+import { sendConfirmationEmails } from '../../../lib/email';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+
+if (!checkAuth(Astro.request)) return Astro.redirect('/admin/login');
+
+const { ref } = Astro.params;
+let booking = await getBookingByRef(ref!);
+if (!booking) return Astro.redirect('/admin/bookings');
+
+const staffList = await getStaff();
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const selectedStaffNames = form.getAll('staff') as string[];
+  const finalPrice = form.get('finalPrice') as string;
+  const status = form.get('status') as string;
+  const sendEmails = form.get('sendEmails') === '1';
+
+  await updateBooking(booking.rowIndex, {
+    assignedCleaner: selectedStaffNames.join(', '),
+    finalPrice,
+    status,
+  });
+
+  if (sendEmails && status === 'Confirmed') {
+    const assignedStaff = staffList.filter(s => selectedStaffNames.includes(s.name));
+    await sendConfirmationEmails({
+      name: booking.name,
+      email: booking.email,
+      service: booking.service,
+      size: booking.size,
+      area: booking.area,
+      date: booking.date,
+      slot: booking.slot,
+      finalPrice,
+      bookingRef: booking.bookingRef,
+      assignedCleaners: selectedStaffNames,
+      staffEmails: assignedStaff.map(s => s.email).filter(Boolean),
+    });
+    return Astro.redirect(`/admin/bookings/${ref}?emailed=1`);
+  }
+  return Astro.redirect(`/admin/bookings/${ref}?saved=1`);
+}
+
+const saved = Astro.url.searchParams.get('saved');
+const emailed = Astro.url.searchParams.get('emailed');
+
+// Reload fresh data after redirect
+booking = await getBookingByRef(ref!) || booking;
+const assignedNames = booking.assignedCleaner
+  ? booking.assignedCleaner.split(',').map((s: string) => s.trim())
+  : [];
+
+function statusColor(status: string) {
+  switch ((status || 'Pending').toLowerCase()) {
+    case 'confirmed': return { bg: '#d1fae5', color: '#065f46' };
+    case 'completed': return { bg: '#e5e7eb', color: '#374151' };
+    case 'declined':  return { bg: '#fee2e2', color: '#991b1b' };
+    default:          return { bg: '#fef3c7', color: '#92400e' };
+  }
+}
+const sc = statusColor(booking.status);
+---
+<AdminLayout title={`Booking ${booking.bookingRef}`}>
+  <a slot="header-actions" href="/admin/bookings" style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;color:#6a5e52;text-decoration:none;">
+    ← All Bookings
+  </a>
+
+  <!-- Success banners -->
+  {saved && (
+    <div style="background:#d1fae5;color:#065f46;padding:14px 20px;margin-bottom:24px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;">
+      ✓ Changes saved successfully.
+    </div>
+  )}
+  {emailed && (
+    <div style="background:#d1fae5;color:#065f46;padding:14px 20px;margin-bottom:24px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;">
+      ✓ Booking confirmed and emails sent to client and assigned staff.
+    </div>
+  )}
+
+  <div style="display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start;">
+
+    <!-- Left: Booking details -->
+    <div>
+      <div style="background:#faf7f0;border:1px solid #e0d8c8;padding:32px;margin-bottom:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <h2 style="font-family:'Fraunces',serif;font-size:20px;font-weight:400;">Booking Details</h2>
+          <span style={`padding:4px 12px;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;background:${sc.bg};color:${sc.color};`}>
+            {booking.status || 'Pending'}
+          </span>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          {[
+            ['Booking Ref', booking.bookingRef],
+            ['Submitted', booking.timestamp],
+            ['Name', booking.name],
+            ['Phone', booking.phone],
+            ['Email', booking.email],
+            ['Service', booking.service],
+            ['Size', booking.size],
+            ['Area', booking.area],
+            ['Date', booking.date],
+            ['Slot', booking.slot],
+            ['Notes', booking.notes],
+            ['Assigned Cleaner', booking.assignedCleaner || '—'],
+            ['Final Price', booking.finalPrice ? `฿${booking.finalPrice}` : '—'],
+            ['Source', booking.source],
+          ].map(([label, value]) => (
+            <tr style="border-top:1px solid #e0d8c8;">
+              <td style="padding:10px 0 10px 0;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#b85c3c;font-weight:700;width:38%;vertical-align:top;padding-right:16px;">{label}</td>
+              <td style="padding:10px 0;font-size:14px;color:#1a1a1a;word-break:break-word;">{value || '—'}</td>
+            </tr>
+          ))}
+        </table>
+      </div>
+    </div>
+
+    <!-- Right: Action panel -->
+    <div>
+      <div style="background:#faf7f0;border:1px solid #e0d8c8;padding:28px;">
+        <h2 style="font-family:'Fraunces',serif;font-size:18px;font-weight:400;margin-bottom:24px;">Manage Booking</h2>
+        <form method="POST">
+
+          <!-- Status -->
+          <div style="margin-bottom:24px;">
+            <label style="display:block;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;font-weight:700;color:#5a5147;margin-bottom:10px;">Status</label>
+            <select name="status" style="width:100%;padding:10px 12px;background:#f6f1e7;border:1px solid #c9bea6;font-family:'Manrope',sans-serif;font-size:14px;color:#1a1a1a;outline:none;cursor:pointer;">
+              {['Pending','Confirmed','Declined','Completed'].map(s => (
+                <option value={s} selected={booking.status === s}>{s}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Final Price -->
+          <div style="margin-bottom:24px;">
+            <label style="display:block;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;font-weight:700;color:#5a5147;margin-bottom:10px;">Final Price (฿)</label>
+            <input
+              type="text"
+              name="finalPrice"
+              value={booking.finalPrice}
+              placeholder="e.g. 1200"
+              style="width:100%;padding:10px 12px;background:#f6f1e7;border:1px solid #c9bea6;font-family:'Fraunces',serif;font-size:16px;color:#1a1a1a;outline:none;"
+            />
+          </div>
+
+          <!-- Assign Staff -->
+          <div style="margin-bottom:28px;">
+            <label style="display:block;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;font-weight:700;color:#5a5147;margin-bottom:4px;">Assign Staff</label>
+            <p style="font-size:11px;color:#6a5e52;margin-bottom:12px;">Select up to 3 cleaners</p>
+            {staffList.length === 0 ? (
+              <p style="font-size:13px;color:#6a5e52;font-style:italic;">No staff added yet. <a href="/admin/staff" style="color:#b85c3c;">Add staff →</a></p>
+            ) : (
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                {staffList.filter(s => s.name).map(staff => (
+                  <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;background:#f0ebe0;border:1px solid #e0d8c8;">
+                    <input
+                      type="checkbox"
+                      name="staff"
+                      value={staff.name}
+                      checked={assignedNames.includes(staff.name)}
+                      style="accent-color:#b85c3c;width:16px;height:16px;"
+                    />
+                    <div>
+                      <div style="font-size:13px;font-weight:600;">{staff.name}</div>
+                      {staff.areas && <div style="font-size:11px;color:#6a5e52;">{staff.areas}</div>}
+                    </div>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <!-- Action buttons -->
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button
+              type="submit"
+              name="sendEmails"
+              value="0"
+              style="width:100%;padding:13px;background:#1a1a1a;color:#f6f1e7;border:none;font-family:'Manrope',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;cursor:pointer;"
+            >
+              Save Changes
+            </button>
+            <button
+              type="submit"
+              name="sendEmails"
+              value="1"
+              style="width:100%;padding:13px;background:#b85c3c;color:#f6f1e7;border:none;font-family:'Manrope',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;cursor:pointer;"
+            >
+              Confirm &amp; Send Emails ✓
+            </button>
+            <p style="font-size:11px;color:#6a5e52;text-align:center;line-height:1.5;">"Confirm &amp; Send" sets status to Confirmed and emails client + assigned staff</p>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</AdminLayout>
+
+<style>
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns"] {
+      display: block !important;
+    }
+  }
+</style>

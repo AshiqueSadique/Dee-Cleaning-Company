@@ -1,0 +1,8 @@
+---
+export const prerender = false;
+import { checkAuth } from '../../lib/auth';
+if (!checkAuth(Astro.request)) {
+  return Astro.redirect('/admin/login');
+}
+return Astro.redirect('/admin/bookings');
+---

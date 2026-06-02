@@ -1,0 +1,119 @@
+---
+export const prerender = false;
+import { checkAuth, createSessionCookie } from '../../lib/auth';
+
+if (checkAuth(Astro.request)) {
+  return Astro.redirect('/admin/bookings');
+}
+
+let error = '';
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const password = form.get('password') as string;
+  const adminPassword = import.meta.env.ADMIN_PASSWORD || 'dee2024admin';
+  if (password === adminPassword) {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: '/admin/bookings',
+        'Set-Cookie': createSessionCookie(),
+      },
+    });
+  }
+  error = 'Incorrect password.';
+}
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login · Dee Cleaning Co.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: #f6f1e7;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card { width: 100%; max-width: 400px; padding: 56px 40px; }
+    .eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: #b85c3c;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 30px;
+      font-weight: 400;
+      margin-bottom: 44px;
+      line-height: 1.2;
+    }
+    label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #5a5147;
+      margin-bottom: 12px;
+    }
+    input[type=password] {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(26,26,26,0.25);
+      padding: 10px 0;
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type=password]:focus { border-bottom-color: #b85c3c; }
+    .error {
+      color: #b85c3c;
+      font-size: 13px;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    button {
+      margin-top: 36px;
+      width: 100%;
+      background: #b85c3c;
+      color: #f6f1e7;
+      border: none;
+      padding: 15px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    button:hover { background: #a04e30; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="eyebrow">Dee Cleaning Co.</p>
+    <h1>Admin login</h1>
+    <form method="POST">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" autofocus required/>
+      {error && <p class="error">{error}</p>}
+      <button type="submit">Sign in →</button>
+    </form>
+  </div>
+</body>
+</html>
