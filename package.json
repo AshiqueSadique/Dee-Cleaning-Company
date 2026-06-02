@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/patch-vercel-adapter.mjs && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "postinstall": "node scripts/patch-vercel-adapter.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^3.3.4",
