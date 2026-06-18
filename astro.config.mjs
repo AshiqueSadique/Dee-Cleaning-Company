@@ -1,17 +1,25 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
-  output: 'hybrid',
+  output: 'static',
   adapter: vercel(),
   integrations: [
     react(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
   ],
+  vite: {
+    css: {
+      postcss: {
+        plugins: [
+          tailwindcss(),
+          autoprefixer(),
+        ],
+      },
+    },
+  },
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'th'],

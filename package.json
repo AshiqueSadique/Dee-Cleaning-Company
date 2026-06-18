@@ -10,10 +10,11 @@
     "postinstall": "node scripts/patch-vercel-adapter.mjs"
   },
   "dependencies": {
-    "@astrojs/react": "^3.3.4",
+    "@astrojs/react": "^4.4.2",
     "@astrojs/tailwind": "^5.1.0",
-    "@astrojs/vercel": "^7.8.2",
-    "astro": "^4.15.3",
+    "@astrojs/vercel": "^10.0.8",
+    "astro": "^6.4.8",
+    "autoprefixer": "^10.5.0",
     "googleapis": "^173.0.0",
     "gsap": "^3.12.5",
     "react": "^18.3.1",
