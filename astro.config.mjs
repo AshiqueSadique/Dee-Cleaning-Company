@@ -25,6 +25,7 @@ export default defineConfig({
     locales: ['en', 'th'],
     routing: {
       prefixDefaultLocale: true,
+      excludePatterns: ['^/admin.*'],
     },
   },
 });
