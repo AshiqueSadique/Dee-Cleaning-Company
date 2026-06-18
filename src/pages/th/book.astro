@@ -17,6 +17,7 @@ const webhookUrl = import.meta.env.PUBLIC_BOOKINGS_WEBHOOK_URL ?? '';
   lang={lang}
 >
   <Nav t={t} lang={lang} />
+  <script>document.getElementById('site-nav')?.classList.add('bg-paper');</script>
   <main id="main-content" class="min-h-screen bg-paper pt-32 pb-24" lang="th">
     <div class="container mx-auto px-6 max-w-2xl">
 
