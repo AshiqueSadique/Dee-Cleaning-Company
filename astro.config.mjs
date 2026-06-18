@@ -23,9 +23,6 @@ export default defineConfig({
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'th'],
-    routing: {
-      prefixDefaultLocale: true,
-      excludePatterns: ['^/admin.*'],
-    },
+    routing: 'manual',
   },
 });
