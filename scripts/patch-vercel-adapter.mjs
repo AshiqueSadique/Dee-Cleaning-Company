@@ -17,20 +17,3 @@ try {
   // Adapter may not exist yet (pre-install)
 }
 
-// Patch 2: Add fluid compute support to .vc-config.json post-build
-const vcConfigPath = join(__dirname, '../.vercel/output/functions/_render.func/.vc-config.json');
-if (existsSync(vcConfigPath)) {
-  try {
-    const config = JSON.parse(readFileSync(vcConfigPath, 'utf8'));
-    // Fluid compute requires these fields
-    if (!config.operationType) {
-      config.operationType = 'Page';
-      writeFileSync(vcConfigPath, JSON.stringify(config, null, '\t'));
-      console.log('Patched .vc-config.json: added operationType=Page for fluid compute');
-    } else {
-      console.log('.vc-config.json already patched.');
-    }
-  } catch (e) {
-    console.error('vc-config patch failed:', e.message);
-  }
-}

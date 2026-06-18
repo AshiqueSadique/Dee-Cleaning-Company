@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/patch-vercel-adapter.mjs && astro build && node scripts/patch-vercel-adapter.mjs",
+    "build": "node scripts/patch-vercel-adapter.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "postinstall": "node scripts/patch-vercel-adapter.mjs"
